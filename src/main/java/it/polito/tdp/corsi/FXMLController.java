@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 
 import it.polito.tdp.corsi.model.Corso;
 import it.polito.tdp.corsi.model.Model;
+import it.polito.tdp.corsi.model.Studente;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -73,6 +74,24 @@ public class FXMLController {
 
     @FXML
     void divisioneStudenti(ActionEvent event) {
+    	txtRisultato.clear();
+    	
+    	String codins = txtCorso.getText();
+    	
+    	//Controllare se il codice corrisponde ad un corso esistente 
+    	if (!this.model.esisteCorso(codins)) {
+    		txtRisultato.appendText("Il corso non esiste!\n");
+    		return;
+    	}
+
+    	//OUTPUT
+    	//dato un corso mi aspetto una divisione di corsi di studi con affianco il numero di studenti di quel corso
+    	
+    	Map <String, Integer> statistiche = this.model.getDivisioneCDS(new Corso (codins, null, null, null));
+    	
+    	for (String cds : statistiche.keySet()) {
+    		txtRisultato.appendText(cds+ " " + statistiche.get(cds)+ "\n");
+    	}
 
     }
 
@@ -105,6 +124,27 @@ public class FXMLController {
 
     @FXML
     void stampStudenti(ActionEvent event) {
+    	txtRisultato.clear();
+    	String codins = txtCorso.getText();
+    	
+    	//Controllare se il codice corrisponde ad un corso esistente 
+    	if (!this.model.esisteCorso(codins)) {
+    		txtRisultato.appendText("Il corso non esiste!\n");
+    		return;
+    	}
+    	
+    	//oppure possiamo prevedere di passare qualunque codice, se non esiste restituiamo una lista vuota, ma non potremo capire cosa non è andato a buon fine
+    	
+    	List <Studente> studenti = this.model.getStudentiByCorso(new Corso (codins, null, null, null));  
+    	
+    	if(studenti.size()==0) {
+    		txtRisultato.appendText("Il corso non ha studenti iscritti!");
+    		return;
+    	}
+    	
+    	for (Studente s : studenti) {
+    		txtRisultato.appendText(s.toString() + "\n");
+    	}
 
     }
 
